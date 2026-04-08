@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SEÑAL — Para el Mincivil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:       #0C1624;
+  --navy-mid:   #111E30;
+  --navy-light: #162238;
+  --signal:     #00D4FF;
+  --signal-dim: rgba(0,212,255,0.10);
+  --signal-glow:rgba(0,212,255,0.30);
+  --amber:      #F5A623;
+  --white:      #F0F4F8;
+  --muted:      rgba(240,244,248,0.45);
+  --green:      #22c55e;
+  --red:        #ef4444;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* GRAIN */
+body::before {
+  content:''; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px 200px; pointer-events:none; z-index:1000; opacity:.5;
+}
+
+/* CURSOR */
+.cursor { position:fixed;top:0;left:0;width:10px;height:10px;background:var(--signal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:screen; }
+.cursor-ring { position:fixed;top:0;left:0;width:36px;height:36px;border:1px solid var(--signal-glow);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s; }
+
+/* ── NAV ── */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  padding:18px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(to bottom,rgba(12,22,36,.97),transparent);
+  backdrop-filter:blur(10px);
+}
+.nav-logo {
+  font-family:'Syne',sans-serif;font-weight:800;font-size:20px;
+  letter-spacing:.15em;color:var(--white);
+  display:flex;align-items:center;gap:10px;text-decoration:none;
+}
+.nav-dot { width:8px;height:8px;background:var(--signal);border-radius:50%;animation:pdot 2s ease-in-out infinite; }
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 var(--signal-glow)}50%{box-shadow:0 0 0 8px transparent}}
+.nav-tag {
+  font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);border:1px solid rgba(0,212,255,0.15);padding:6px 14px;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh;
+  display:grid;place-items:center;
+  padding:120px 48px 80px;
+  position:relative;overflow:hidden;
+}
+.hero::before {
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,0.035) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);
+}
+.hero-orb {
+  position:absolute;top:-15%;left:50%;transform:translateX(-50%);
+  width:800px;height:500px;
+  background:radial-gradient(ellipse,rgba(0,212,255,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-inner {
+  max-width:860px;width:100%;
+  text-align:center;position:relative;z-index:2;
+}
+.hero-kicker {
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:10px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--signal);margin-bottom:28px;
+  border:1px solid rgba(0,212,255,0.2);padding:8px 18px;
+}
+.hero-kicker::before { content:''; width:20px;height:1px;background:var(--signal); }
+.hero-kicker::after  { content:''; width:20px;height:1px;background:var(--signal); }
+
+.hero-title {
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(48px,8vw,96px);
+  line-height:.92;letter-spacing:-.03em;margin-bottom:12px;
+}
+.hero-title .line2 {
+  font-style:italic;font-family:'Fraunces',serif;
+  font-weight:300;color:var(--signal);
+  font-size:.6em;display:block;line-height:1.3;margin-top:8px;
+}
+.hero-sub {
+  font-family:'Fraunces',serif;font-weight:300;
+  font-size:clamp(16px,2vw,20px);color:var(--muted);
+  max-width:640px;margin:28px auto 0;line-height:1.65;
+}
+.hero-sub strong { color:var(--white);font-weight:400; }
+
+.hero-stats {
+  display:flex;gap:0;justify-content:center;
+  margin:52px auto 0;max-width:680px;
+  border:1px solid rgba(0,212,255,0.1);
+}
+.hero-stat {
+  flex:1;padding:24px 16px;border-right:1px solid rgba(0,212,255,0.1);
+  text-align:center;
+}
+.hero-stat:last-child { border-right:none; }
+.hstat-num {
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(28px,4vw,40px);color:var(--signal);
+  display:block;line-height:1;margin-bottom:6px;
+}
+.hstat-label { font-size:11px;color:var(--muted);letter-spacing:.05em;line-height:1.3; }
+
+.hero-cta {
+  margin-top:52px;
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+}
+.btn-hero {
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--navy);background:var(--signal);
+  padding:16px 40px;border:none;cursor:none;text-decoration:none;
+  display:inline-block;transition:box-shadow .2s,transform .2s;
+}
+.btn-hero:hover { box-shadow:0 0 40px var(--signal-glow);transform:translateY(-2px); }
+.btn-hero-ghost {
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);background:transparent;
+  padding:16px 40px;border:1px solid rgba(240,244,248,0.15);
+  cursor:none;text-decoration:none;display:inline-block;
+  transition:color .2s,border-color .2s,transform .2s;
+}
+.btn-hero-ghost:hover { color:var(--signal);border-color:var(--signal);transform:translateY(-2px); }
+
+/* ── PROBLEMA ── */
+.problema {
+  background:var(--navy-mid);
+  border-top:1px solid rgba(0,212,255,0.08);
+  border-bottom:1px solid rgba(0,212,255,0.08);
+  padding:80px 48px;
+}
+.problema-inner { max-width:1000px;margin:0 auto; }
+.section-eyebrow {
+  font-size:10px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;margin-bottom:20px;
+}
+.section-eyebrow::before { content:'';width:24px;height:1px;background:var(--signal); }
+.section-title {
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(30px,4.5vw,48px);
+  line-height:1.05;letter-spacing:-.02em;margin-bottom:12px;
+}
+.section-sub {
+  font-family:'Fraunces',serif;font-weight:300;
+  font-size:17px;color:var(--muted);line-height:1.65;margin-bottom:48px;
+  max-width:560px;
+}
+
+.problema-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+}
+.problema-card {
+  background:var(--navy);padding:28px 24px;
+  border:1px solid rgba(255,255,255,0.04);
+  position:relative;overflow:hidden;
+}
+.problema-card::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#ef4444,transparent);
+}
+.p-x { color:#ef4444;font-family:'Syne',sans-serif;font-weight:800;font-size:20px;margin-bottom:12px; }
+.p-title { font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--white);margin-bottom:8px; }
+.p-desc { font-size:13px;color:var(--muted);line-height:1.55; }
+
+/* ── ANTES / DESPUÉS ── */
+.antesdespues {
+  padding:80px 48px;
+  max-width:1000px;margin:0 auto;
+}
+.ad-grid {
+  display:grid;grid-template-columns:1fr 60px 1fr;gap:0;
+  align-items:stretch;margin-top:48px;
+}
+.ad-col {
+  border:1px solid rgba(255,255,255,0.06);
+  overflow:hidden;
+}
+.ad-col.antes { border-color:rgba(239,68,68,0.2); }
+.ad-col.despues { border-color:rgba(0,212,255,0.2); }
+
+.ad-header {
+  padding:16px 24px;
+  display:flex;align-items:center;gap:10px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;
+}
+.ad-col.antes .ad-header { background:rgba(239,68,68,0.08);color:#ef4444; }
+.ad-col.despues .ad-header { background:rgba(0,212,255,0.08);color:var(--signal); }
+
+.ad-items { padding:8px 0; }
+.ad-item {
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 24px;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  font-size:13px;line-height:1.5;
+}
+.ad-item:last-child { border-bottom:none; }
+.ad-col.antes .ad-item { color:rgba(240,244,248,0.55); }
+.ad-col.despues .ad-item { color:rgba(240,244,248,0.8); }
+.ad-icon { flex-shrink:0;margin-top:1px;font-size:14px; }
+
+.ad-arrow {
+  display:flex;align-items:center;justify-content:center;
+  background:var(--navy-mid);position:relative;
+}
+.ad-arrow-inner {
+  width:40px;height:40px;
+  background:var(--signal);
+  display:grid;place-items:center;
+  font-size:18px;color:var(--navy);
+  box-shadow:0 0 30px var(--signal-glow);
+}
+
+/* ── POR QUÉ SEÑAL ── */
+.porqusenal {
+  background:var(--navy-mid);
+  border-top:1px solid rgba(0,212,255,0.08);
+  border-bottom:1px solid rgba(0,212,255,0.08);
+  padding:80px 48px;
+}
+.porqusenal-inner { max-width:1000px;margin:0 auto; }
+
+.beneficios-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+  margin-top:48px;
+}
+.benef-card {
+  background:var(--navy);padding:32px 28px;
+  border:1px solid rgba(0,212,255,0.06);
+  position:relative;overflow:hidden;
+  transition:border-color .3s;
+}
+.benef-card:hover { border-color:rgba(0,212,255,0.25); }
+.benef-card::after {
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--signal),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform .4s;
+}
+.benef-card:hover::after { transform:scaleX(1); }
+.benef-num {
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:48px;line-height:1;
+  color:rgba(0,212,255,0.12);margin-bottom:16px;
+  letter-spacing:-.02em;
+}
+.benef-title { font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px; }
+.benef-desc { font-size:13px;color:var(--muted);line-height:1.6; }
+.benef-tag {
+  display:inline-block;margin-top:16px;
+  font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--signal);border:1px solid rgba(0,212,255,0.2);padding:4px 10px;
+}
+
+/* ── QUOTE ── */
+.quote-section {
+  padding:72px 48px;max-width:780px;margin:0 auto;text-align:center;
+}
+.quote-mark {
+  font-family:'Fraunces',serif;font-size:80px;line-height:.6;
+  color:var(--signal);opacity:.3;margin-bottom:8px;display:block;
+}
+.quote-text {
+  font-family:'Fraunces',serif;font-weight:300;font-style:italic;
+  font-size:clamp(20px,3vw,28px);line-height:1.5;color:var(--white);
+  margin-bottom:24px;
+}
+.quote-text span { color:var(--signal);font-style:normal;font-weight:400; }
+.quote-author { font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--muted); }
+
+/* ── HECHO EN COLOMBIA ── */
+.colombia-strip {
+  border-top:1px solid rgba(0,212,255,0.08);
+  border-bottom:1px solid rgba(0,212,255,0.08);
+  padding:28px 48px;
+  display:flex;align-items:center;justify-content:center;gap:24px;
+  background:var(--navy-mid);
+  flex-wrap:wrap;
+}
+.col-badge {
+  display:flex;align-items:center;gap:10px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.col-flag { font-size:20px; }
+.col-sep { width:1px;height:20px;background:rgba(0,212,255,0.1); }
+
+/* ── CTA FINAL ── */
+.cta-section {
+  padding:100px 48px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-section::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 50% 100%,rgba(0,212,255,0.05),transparent);
+  pointer-events:none;
+}
+.cta-eyebrow {
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:10px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--signal);margin-bottom:24px;
+}
+.cta-eyebrow::before,.cta-eyebrow::after { content:'';width:20px;height:1px;background:var(--signal); }
+.cta-title {
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(36px,6vw,68px);
+  line-height:.95;letter-spacing:-.02em;margin-bottom:20px;
+}
+.cta-title em { font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--signal); }
+.cta-sub {
+  font-family:'Fraunces',serif;font-weight:300;
+  font-size:18px;color:var(--muted);margin-bottom:16px;line-height:1.6;
+}
+.cta-sub strong { color:var(--white);font-weight:400; }
+.cta-nota {
+  font-size:11px;color:rgba(240,244,248,0.25);margin-bottom:44px;
+  font-style:italic;
+}
+.cta-buttons { display:flex;gap:16px;justify-content:center;flex-wrap:wrap; }
+.btn-cta {
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--navy);background:var(--signal);
+  padding:20px 48px;border:none;cursor:none;text-decoration:none;
+  display:inline-block;transition:box-shadow .2s,transform .2s;
+}
+.btn-cta:hover { box-shadow:0 0 60px var(--signal-glow);transform:translateY(-3px); }
+.btn-cta-ghost {
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--white);background:transparent;
+  padding:20px 48px;border:1px solid rgba(240,244,248,0.15);
+  cursor:none;text-decoration:none;display:inline-block;
+  transition:border-color .2s,color .2s,transform .2s;
+}
+.btn-cta-ghost:hover { border-color:var(--signal);color:var(--signal);transform:translateY(-3px); }
+
+/* ── FOOTER ── */
+footer {
+  border-top:1px solid rgba(0,212,255,0.08);
+  padding:28px 48px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.footer-logo { font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:.15em;display:flex;align-items:center;gap:8px; }
+.footer-copy { font-size:11px;color:rgba(240,244,248,0.3);text-align:center;line-height:1.7; }
+.footer-copy span { color:var(--signal); }
+.footer-kairos { font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,244,248,0.2);text-align:right; }
+.footer-kairos strong { color:rgba(240,244,248,0.4);display:block; }
+
+/* ── PRINT ── */
+@media print {
+  body { cursor:auto;background:#0C1624 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact; }
+  .cursor,.cursor-ring,nav { display:none; }
+  .hero { min-height:auto;padding:48px; }
+  .problema,.porqusenal,.antesdespues,.quote-section,.cta-section,.colombia-strip { break-inside:avoid; }
+  .btn-hero,.btn-hero-ghost,.btn-cta,.btn-cta-ghost { display:none; }
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav { padding:16px 20px; }
+  .nav-tag { font-size:8px;padding:5px 10px;letter-spacing:.12em; }
+  .hero { padding:100px 20px 64px; }
+  .hero-inner { width:100%; }
+  .hero-kicker {
+    display:flex;flex-wrap:wrap;justify-content:center;
+    letter-spacing:.12em;font-size:9px;
+    padding:8px 14px;text-align:center;
+    max-width:100%;
+  }
+  .hero-kicker::before,.hero-kicker::after { width:14px; }
+  .hero-title { font-size:clamp(32px,9vw,64px); letter-spacing:-.01em; overflow-wrap:break-word; word-break:normal; }
+  .hero-sub { font-size:15px; }
+  .hero-stats { flex-direction:column;border:none;gap:1px; }
+  .hero-stat { border:1px solid rgba(0,212,255,0.1);border-right:1px solid rgba(0,212,255,0.1)!important; }
+  .hero-cta { flex-direction:column;align-items:center; }
+  .btn-hero,.btn-hero-ghost { width:100%;max-width:320px;text-align:center; }
+  .problema,.porqusenal { padding:60px 20px; }
+  .problema-grid { grid-template-columns:1fr; }
+  .antesdespues { padding:60px 20px; }
+  .ad-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .ad-col.antes { order: 1; }
+  .ad-arrow {
+    order: 2;
+    padding: 20px;
+    transform: none;
+    min-height: 64px;
+  }
+  .ad-arrow-inner { transform: rotate(90deg); }
+  .ad-col.despues { order: 3; }
+  .beneficios-grid { grid-template-columns:1fr; }
+  .quote-section { padding:56px 20px; }
+  .colombia-strip { padding:24px 20px; }
+  .cta-section { padding:72px 20px; }
+  footer { padding:24px 20px;flex-direction:column;text-align:center; }
+  .footer-kairos { text-align:center; }
+  body { cursor:auto; }
+  .cursor,.cursor-ring { display:none; }
+}
+
+@media(max-width:480px){
+  .hero-kicker { letter-spacing:.08em;font-size:8px; }
+  .hero-kicker::before,.hero-kicker::after { display:none; }
+  .hero-title { font-size:clamp(28px,10vw,56px); }
+  .section-title { font-size:clamp(26px,7vw,38px); }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><div class="nav-dot"></div>SEÑAL</a>
+  <div class="nav-tag">Para Mincivil</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-inner">
+    <div class="hero-kicker">Tecnología operativa colombiana</div>
+    <h1 class="hero-title">
+      SIN PAPEL.<br/>SIN RETRASOS.
+      <span class="line2">Tu operación en movimiento, siempre.</span>
+    </h1>
+    <p class="hero-sub">
+      <strong>SEÑAL</strong> es la plataforma que digitaliza, automatiza y trazabiliza en tiempo real todos los permisos de trabajo y formularios operativos de tu organización — desde el operario en campo hasta el gerente en oficina.
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hstat-num">-97%</span>
+        <div class="hstat-label">Tiempo en gestión<br/>de permisos</div>
+      </div>
+      <div class="hero-stat">
+        <span class="hstat-num">100%</span>
+        <div class="hstat-label">Trazabilidad<br/>en tiempo real</div>
+      </div>
+      <div class="hero-stat">
+        <span class="hstat-num">0</span>
+        <div class="hstat-label">Papel necesario.<br/>Todo digital.</div>
+      </div>
+      <div class="hero-stat">
+        <span class="hstat-num">∞</span>
+        <div class="hstat-label">Formularios<br/>configurables</div>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <a href="mailto:hola@kairosdls.co?subject=Cita Mincivil - SEÑAL" class="btn-hero">Solicitar cita presencial</a>
+      <a href="#beneficios" class="btn-hero-ghost">Ver beneficios</a>
+    </div>
+  </div>
+</section>
+
+<!-- EL PROBLEMA -->
+<div class="problema">
+  <div class="problema-inner">
+    <div class="section-eyebrow">El problema actual</div>
+    <h2 class="section-title">Lo que le cuesta a tu organización<br/>operar en papel.</h2>
+    <p class="section-sub">Cada formulario manual es un riesgo operativo, legal y humano que no tienes por qué seguir asumiendo.</p>
+    <div class="problema-grid">
+      <div class="problema-card">
+        <div class="p-x">✕</div>
+        <div class="p-title">Sin trazabilidad real</div>
+        <div class="p-desc">No existe forma de saber en tiempo real quién llenó qué permiso, desde dónde y cuándo. En una auditoría, eso es riesgo puro.</div>
+      </div>
+      <div class="problema-card">
+        <div class="p-x">✕</div>
+        <div class="p-title">Semanas perdidas en papeleo</div>
+        <div class="p-desc">Formularios que se llenan a mano, se archivan en carpetas físicas y tardan días o semanas en llegar a quien los necesita.</div>
+      </div>
+      <div class="problema-card">
+        <div class="p-x">✕</div>
+        <div class="p-title">Operarios sin control de ubicación</div>
+        <div class="p-desc">No hay certeza de que un operario esté realmente en la obra cuando llena un permiso. Sin geolocalización, la información no es confiable.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ANTES / DESPUÉS -->
+<div class="antesdespues">
+  <div class="section-eyebrow">Antes y después</div>
+  <h2 class="section-title">El cambio que hace SEÑAL.</h2>
+
+  <div class="ad-grid">
+    <!-- ANTES -->
+    <div class="ad-col antes">
+      <div class="ad-header">✕ &nbsp;Sin SEÑAL</div>
+      <div class="ad-items">
+        <div class="ad-item"><div class="ad-icon">📋</div>Permisos en papel, llenados a mano y archivados en carpetas físicas</div>
+        <div class="ad-item"><div class="ad-icon">⏳</div>Semanas para consolidar información de múltiples obras o sedes</div>
+        <div class="ad-item"><div class="ad-icon">❓</div>Sin certeza de que el operario está donde dice estar</div>
+        <div class="ad-item"><div class="ad-icon">📭</div>La información tarda días en llegar al administrador</div>
+        <div class="ad-item"><div class="ad-icon">⚠️</div>Auditorías que exponen a la organización por documentación incompleta</div>
+        <div class="ad-item"><div class="ad-icon">🔒</div>Sin firma digital: validez legal en riesgo</div>
+      </div>
+    </div>
+
+    <!-- FLECHA -->
+    <div class="ad-arrow">
+      <div class="ad-arrow-inner">→</div>
+    </div>
+
+    <!-- DESPUÉS -->
+    <div class="ad-col despues">
+      <div class="ad-header">✓ &nbsp;Con SEÑAL</div>
+      <div class="ad-items">
+        <div class="ad-item"><div class="ad-icon">📱</div>Permisos digitales, firmados con el dedo y enviados al instante por correo</div>
+        <div class="ad-item"><div class="ad-icon">⚡</div>Información consolidada en tiempo real desde cualquier dispositivo</div>
+        <div class="ad-item"><div class="ad-icon">📍</div>Geolocalización obligatoria: el operario solo opera donde debe estar</div>
+        <div class="ad-item"><div class="ad-icon">📨</div>El administrador recibe el documento firmado en el momento exacto del diligenciamiento en el tipo de archivo que se necesite (pdf, zip, excel, entre otros)</div>
+        <div class="ad-item"><div class="ad-icon">✅</div>Trazabilidad 360° lista para cualquier auditoría, en segundos</div>
+        <div class="ad-item"><div class="ad-icon">⚖️</div>Firma digital con respaldo electrónico y validez legal completa</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POR QUÉ SEÑAL -->
+<div class="porqusenal" id="beneficios">
+  <div class="porqusenal-inner">
+    <div class="section-eyebrow">Por qué SEÑAL</div>
+    <h2 class="section-title">Diseñada para operar.<br/>Construida para escalar.</h2>
+    <p class="section-sub">No es un formulario en la nube. Es una plataforma operativa completa con inteligencia artificial, adaptada a la realidad colombiana.</p>
+
+    <div class="beneficios-grid">
+      <div class="benef-card">
+        <div class="benef-num">01</div>
+        <div class="benef-title">Personalización total</div>
+        <div class="benef-desc">Cada formulario, cada permiso, cada rol y cada identidad visual se adapta a tu organización. SEÑAL desaparece — queda tu marca.</div>
+        <div class="benef-tag">White-label</div>
+      </div>
+      <div class="benef-card">
+        <div class="benef-num">02</div>
+        <div class="benef-title">Dos modos de operación</div>
+        <div class="benef-desc">Modo Juego para mayor compromiso del equipo. Modo Lite para zonas con señal limitada. Tu operario siempre puede reportar.</div>
+        <div class="benef-tag">Campo real</div>
+      </div>
+      <div class="benef-card">
+        <div class="benef-num">03</div>
+        <div class="benef-title">IA operativa incluida</div>
+        <div class="benef-desc">SEÑAL IA analiza patrones, genera reportes ejecutivos automáticos y alerta sobre riesgos antes de que se conviertan en problemas. Powered by Anthropic.</div>
+        <div class="benef-tag">Inteligencia real</div>
+      </div>
+      <div class="benef-card">
+        <div class="benef-num">04</div>
+        <div class="benef-title">Geolocalización obligatoria</div>
+        <div class="benef-desc">Verificación automática de ubicación al iniciar sesión. Radio configurable por obra. Sin excepciones, sin trampas.</div>
+        <div class="benef-tag">Control total</div>
+      </div>
+      <div class="benef-card">
+        <div class="benef-num">05</div>
+        <div class="benef-title">Firma digital con respaldo legal</div>
+        <div class="benef-desc">Pad de firma táctil con validez electrónica para cualquier auditoría. Cada permiso es un documento legalmente respaldado.</div>
+        <div class="benef-tag">Cumplimiento legal</div>
+      </div>
+      <div class="benef-card">
+        <div class="benef-num">06</div>
+        <div class="benef-title">Reportes en tiempo real</div>
+        <div class="benef-desc">Excel, PDF o consulta directa desde el panel. El tomador de decisiones tiene la información antes de que termine la reunión.</div>
+        <div class="benef-tag">Decisiones rápidas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <span class="quote-mark">"</span>
+  <p class="quote-text">
+    Las tareas que antes nos tomaban <span>un mes entero</span> ahora las resolvemos en <span>unas pocas horas</span>. La vida se nos volvió más sencilla.
+  </p>
+  <div class="quote-author">Administradora de operaciones · Usuario real de SEÑAL</div>
+</div>
+
+<!-- HECHO EN COLOMBIA -->
+<div class="colombia-strip">
+  <div class="col-badge"><span class="col-flag">🇨🇴</span>Hecho con orgullo en Colombia</div>
+  <div class="col-sep"></div>
+  <div class="col-badge">Tecnología colombiana para operaciones colombianas</div>
+  <div class="col-sep"></div>
+  <div class="col-badge">Kairos DLS Group S.A.S</div>
+</div>
+
+<!-- CTA FINAL -->
+<section class="cta-section" id="contacto">
+  <div class="cta-eyebrow">El siguiente paso</div>
+  <h2 class="cta-title">30 minutos.<br/><em>Una Presentación en vivo.</em></h2>
+  <p class="cta-nota"> Nos ajustamos a su agenda.</p>
+  <div class="cta-buttons">
+    <a href="mailto:hola@kairosdls.co?subject=Solicitud%20de%20cita%20-%20Mincivil%20y%20Se%C3%B1al" class="btn-cta">Solicitar cita presencial</a>
+    <a href="https://wa.me/57300000000?text=Hola,%20soy%20de%20Mincivil%20y%20quiero%20agendar%20una%20cita%20para%20conocer%20SEÑAL" class="btn-cta-ghost">Escribir por WhatsApp</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><div class="nav-dot"></div>SEÑAL</div>
+  <div class="footer-copy">Documento preparado para Mincivil · 2026<br/><span>Hecho con orgullo en Colombia 🇨🇴</span></div>
+  <div class="footer-kairos"><strong>Kairos DLS Group S.A.S</strong>El momento en que todo cambia</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function tick(){
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(tick);
+})();
+document.querySelectorAll('a,button,.benef-card,.problema-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='18px';cursor.style.height='18px';ring.style.width='52px';ring.style.height='52px';});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='10px';cursor.style.height='10px';ring.style.width='36px';ring.style.height='36px';});
+});
+</script>
+</body>
+</html>

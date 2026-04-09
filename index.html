@@ -61,8 +61,9 @@ nav {
 .nav-dot { width:8px;height:8px;background:var(--signal);border-radius:50%;animation:pdot 2s ease-in-out infinite; }
 @keyframes pdot{0%,100%{box-shadow:0 0 0 0 var(--signal-glow)}50%{box-shadow:0 0 0 8px transparent}}
 .nav-tag {
-  font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--muted);border:1px solid rgba(0,212,255,0.15);padding:6px 14px;
+  font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--signal);border:1px solid rgba(0,212,255,0.3);padding:8px 20px;
+  background:rgba(0,212,255,0.05);
 }
 
 /* ── HERO ── */
@@ -200,43 +201,55 @@ nav {
   padding:80px 48px;
   max-width:1000px;margin:0 auto;
 }
-.ad-grid {
+.cmp-grid {
   display:grid;grid-template-columns:1fr 60px 1fr;gap:0;
   align-items:stretch;margin-top:48px;
 }
-.ad-col {
+.cmp-col {
   border:1px solid rgba(255,255,255,0.06);
   overflow:hidden;
 }
-.ad-col.antes { border-color:rgba(239,68,68,0.2); }
-.ad-col.despues { border-color:rgba(0,212,255,0.2); }
+.cmp-col.antes { border-color:rgba(239,68,68,0.2); }
+.cmp-col.despues { border-color:rgba(0,212,255,0.2); }
 
-.ad-header {
+.cmp-header {
   padding:16px 24px;
   display:flex;align-items:center;gap:10px;
   font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
   letter-spacing:.15em;text-transform:uppercase;
 }
-.ad-col.antes .ad-header { background:rgba(239,68,68,0.08);color:#ef4444; }
-.ad-col.despues .ad-header { background:rgba(0,212,255,0.08);color:var(--signal); }
+.cmp-col.antes .cmp-header { background:rgba(239,68,68,0.08);color:#ef4444; }
+.cmp-col.despues .cmp-header { background:rgba(0,212,255,0.08);color:var(--signal); }
 
-.ad-items { padding:8px 0; }
-.ad-item {
+.cmp-items { padding:8px 0; }
+.cmp-item {
   display:flex;align-items:flex-start;gap:12px;
   padding:14px 24px;
   border-bottom:1px solid rgba(255,255,255,0.03);
   font-size:13px;line-height:1.5;
 }
-.ad-item:last-child { border-bottom:none; }
-.ad-col.antes .ad-item { color:rgba(240,244,248,0.55); }
-.ad-col.despues .ad-item { color:rgba(240,244,248,0.8); }
-.ad-icon { flex-shrink:0;margin-top:1px;font-size:14px; }
+.cmp-item:last-child { border-bottom:none; }
+.cmp-col.antes .cmp-item { color:rgba(240,244,248,0.55); }
+.cmp-col.despues .cmp-item {
+  color:rgba(240,244,248,0.8);
+  transition:background .25s, border-color .25s, transform .25s, box-shadow .25s;
+  position:relative;
+}
+.cmp-col.despues .cmp-item:hover {
+  background:rgba(0,212,255,0.06);
+  border-color:rgba(0,212,255,0.18);
+  transform:scale(1.025) translateX(4px);
+  box-shadow:0 0 20px rgba(0,212,255,0.08);
+  color:var(--white);
+  z-index:1;
+}
+.cmp-icon { flex-shrink:0;margin-top:1px;font-size:14px; }
 
-.ad-arrow {
+.cmp-arrow {
   display:flex;align-items:center;justify-content:center;
   background:var(--navy-mid);position:relative;
 }
-.ad-arrow-inner {
+.cmp-arrow-inner {
   width:40px;height:40px;
   background:var(--signal);
   display:grid;place-items:center;
@@ -410,19 +423,19 @@ footer {
   .problema,.porqusenal { padding:60px 20px; }
   .problema-grid { grid-template-columns:1fr; }
   .antesdespues { padding:60px 20px; }
-  .ad-grid {
+  .cmp-grid {
     display: flex;
     flex-direction: column;
   }
-  .ad-col.antes { order: 1; }
-  .ad-arrow {
+  .cmp-col.antes { order: 1; }
+  .cmp-arrow {
     order: 2;
     padding: 20px;
     transform: none;
     min-height: 64px;
   }
-  .ad-arrow-inner { transform: rotate(90deg); }
-  .ad-col.despues { order: 3; }
+  .cmp-arrow-inner { transform: rotate(90deg); }
+  .cmp-col.despues { order: 3; }
   .beneficios-grid { grid-template-columns:1fr; }
   .quote-section { padding:56px 20px; }
   .colombia-strip { padding:24px 20px; }
@@ -462,7 +475,7 @@ footer {
       <span class="line2">Tu operación en movimiento, siempre.</span>
     </h1>
     <p class="hero-sub">
-      <strong>SEÑAL</strong> es la plataforma que digitaliza, automatiza y trazabiliza en tiempo real todos los permisos de trabajo y formularios operativos de tu organización — desde el operario en campo hasta el gerente en oficina.
+      <strong>SEÑAL</strong> es la plataforma que digitaliza, automatiza y trazabiliza en tiempo real <strong>todos los permisos de trabajo y formularios operativos de tu organización</strong> — desde el operario en campo hasta el gerente en oficina.
     </p>
 
     <div class="hero-stats">
@@ -495,7 +508,7 @@ footer {
 <div class="problema">
   <div class="problema-inner">
     <div class="section-eyebrow">El problema actual</div>
-    <h2 class="section-title">Lo que le cuesta a tu organización<br/>operar en papel.</h2>
+    <h2 class="section-title">Lo que le cuesta a tu MinCivil<br/>operar en papel.</h2>
     <p class="section-sub">Cada formulario manual es un riesgo operativo, legal y humano que no tienes por qué seguir asumiendo.</p>
     <div class="problema-grid">
       <div class="problema-card">
@@ -522,35 +535,35 @@ footer {
   <div class="section-eyebrow">Antes y después</div>
   <h2 class="section-title">El cambio que hace SEÑAL.</h2>
 
-  <div class="ad-grid">
+  <div class="cmp-grid">
     <!-- ANTES -->
-    <div class="ad-col antes">
-      <div class="ad-header">✕ &nbsp;Sin SEÑAL</div>
-      <div class="ad-items">
-        <div class="ad-item"><div class="ad-icon">📋</div>Permisos en papel, llenados a mano y archivados en carpetas físicas</div>
-        <div class="ad-item"><div class="ad-icon">⏳</div>Semanas para consolidar información de múltiples obras o sedes</div>
-        <div class="ad-item"><div class="ad-icon">❓</div>Sin certeza de que el operario está donde dice estar</div>
-        <div class="ad-item"><div class="ad-icon">📭</div>La información tarda días en llegar al administrador</div>
-        <div class="ad-item"><div class="ad-icon">⚠️</div>Auditorías que exponen a la organización por documentación incompleta</div>
-        <div class="ad-item"><div class="ad-icon">🔒</div>Sin firma digital: validez legal en riesgo</div>
+    <div class="cmp-col antes">
+      <div class="cmp-header">✕ &nbsp;Sin SEÑAL</div>
+      <div class="cmp-items">
+        <div class="cmp-item"><div class="cmp-icon">📋</div>Permisos en papel, llenados a mano y archivados en carpetas físicas</div>
+        <div class="cmp-item"><div class="cmp-icon">⏳</div>Semanas para consolidar información de múltiples obras o sedes</div>
+        <div class="cmp-item"><div class="cmp-icon">❓</div>Sin certeza de que el operario está donde dice estar</div>
+        <div class="cmp-item"><div class="cmp-icon">📭</div>La información tarda días en llegar al administrador</div>
+        <div class="cmp-item"><div class="cmp-icon">⚠️</div>Auditorías que exponen a la organización por documentación incompleta</div>
+        <div class="cmp-item"><div class="cmp-icon">🔒</div>Sin firma digital: validez legal en riesgo</div>
       </div>
     </div>
 
     <!-- FLECHA -->
-    <div class="ad-arrow">
-      <div class="ad-arrow-inner">→</div>
+    <div class="cmp-arrow">
+      <div class="cmp-arrow-inner">→</div>
     </div>
 
     <!-- DESPUÉS -->
-    <div class="ad-col despues">
-      <div class="ad-header">✓ &nbsp;Con SEÑAL</div>
-      <div class="ad-items">
-        <div class="ad-item"><div class="ad-icon">📱</div>Permisos digitales, firmados con el dedo y enviados al instante por correo</div>
-        <div class="ad-item"><div class="ad-icon">⚡</div>Información consolidada en tiempo real desde cualquier dispositivo</div>
-        <div class="ad-item"><div class="ad-icon">📍</div>Geolocalización obligatoria: el operario solo opera donde debe estar</div>
-        <div class="ad-item"><div class="ad-icon">📨</div>El administrador recibe el documento firmado en el momento exacto del diligenciamiento en el tipo de archivo que se necesite (pdf, zip, excel, entre otros)</div>
-        <div class="ad-item"><div class="ad-icon">✅</div>Trazabilidad 360° lista para cualquier auditoría, en segundos</div>
-        <div class="ad-item"><div class="ad-icon">⚖️</div>Firma digital con respaldo electrónico y validez legal completa</div>
+    <div class="cmp-col despues">
+      <div class="cmp-header">✓ &nbsp;Con SEÑAL</div>
+      <div class="cmp-items">
+        <div class="cmp-item"><div class="cmp-icon">📱</div>Permisos digitales, firmados con el dedo y enviados al instante por correo</div>
+        <div class="cmp-item"><div class="cmp-icon">⚡</div>Información consolidada en tiempo real desde cualquier dispositivo</div>
+        <div class="cmp-item"><div class="cmp-icon">📍</div>Geolocalización obligatoria: el operario solo opera donde debe estar</div>
+        <div class="cmp-item"><div class="cmp-icon">📨</div>El administrador recibe el documento firmado en el momento exacto del diligenciamiento en el tipo de archivo que se necesite (pdf, zip, excel, entre otros)</div>
+        <div class="cmp-item"><div class="cmp-icon">✅</div>Trazabilidad 360° lista para cualquier auditoría, en segundos</div>
+        <div class="cmp-item"><div class="cmp-icon">⚖️</div>Firma digital con respaldo electrónico y validez legal completa</div>
       </div>
     </div>
   </div>
